@@ -1,0 +1,218 @@
+[
+    {
+        "id": "83e24ff8e628129b",
+        "type": "tab",
+        "label": "Room Temperature Display Living Room",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f9610c39b32051e7",
+        "type": "group",
+        "z": "83e24ff8e628129b",
+        "name": "App: Room Temperature",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "dbb0629ac1b6f6da",
+            "257028b958eeefd0",
+            "e847821b7c93f570",
+            "e2ed5c5d3c67abc4",
+            "0b2f9bd5a1b99b50",
+            "e85e5cadb5f11152",
+            "b8b1b44a277d8cbf"
+        ],
+        "x": 14,
+        "y": 59,
+        "w": 1372,
+        "h": 202
+    },
+    {
+        "id": "dbb0629ac1b6f6da",
+        "type": "inject",
+        "z": "83e24ff8e628129b",
+        "g": "f9610c39b32051e7",
+        "name": "1x/10min",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "room_temperature",
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "e85e5cadb5f11152"
+            ]
+        ]
+    },
+    {
+        "id": "257028b958eeefd0",
+        "type": "function",
+        "z": "83e24ff8e628129b",
+        "g": "f9610c39b32051e7",
+        "name": "Parser",
+        "func": "var temperature = msg.payload;\n\nif (temperature === undefined) {\n    node.error('Temperature is undefined', msg);\n    return null;\n}\n\nmsg.payload = {\n    \"text\": temperature,\n    \"icon\": 7112,\n    \"duration\": 5\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 160,
+        "wires": [
+            [
+                "b8b1b44a277d8cbf",
+                "e2ed5c5d3c67abc4"
+            ]
+        ]
+    },
+    {
+        "id": "e847821b7c93f570",
+        "type": "comment",
+        "z": "83e24ff8e628129b",
+        "g": "f9610c39b32051e7",
+        "name": "Room Temperature",
+        "info": "Set the IP address of your Home Assistant and the Long-Lived Access Token in the **[Home Assistant API]** Node.  \nSet the IP address of your LED Matrix Clock in the **[AwtrixLight/Custom]** Node.  \nUses the 'temperature' icon.",
+        "x": 85,
+        "y": 100,
+        "wires": [],
+        "l": false
+    },
+    {
+        "id": "e2ed5c5d3c67abc4",
+        "type": "http request",
+        "z": "83e24ff8e628129b",
+        "g": "f9610c39b32051e7",
+        "name": "AwtrixLight/Custom",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "http://example.com/api/custom?name=room_temperature",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 1110,
+        "y": 160,
+        "wires": [
+            [
+                "0b2f9bd5a1b99b50"
+            ]
+        ]
+    },
+    {
+        "id": "0b2f9bd5a1b99b50",
+        "type": "debug",
+        "z": "83e24ff8e628129b",
+        "g": "f9610c39b32051e7",
+        "name": "Response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1280,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "e85e5cadb5f11152",
+        "type": "api-current-state",
+        "z": "83e24ff8e628129b",
+        "g": "f9610c39b32051e7",
+        "name": "",
+        "server": "36cc9f18.c96dd",
+        "version": 3,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "entity_id": "sensor.example_temperature_sensor",
+        "state_type": "str",
+        "blockInputOverrides": false,
+        "outputProperties": [
+            {
+                "property": "payload",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entityState"
+            },
+            {
+                "property": "data",
+                "propertyType": "msg",
+                "value": "",
+                "valueType": "entity"
+            }
+        ],
+        "for": "0",
+        "forType": "num",
+        "forUnits": "minutes",
+        "override_topic": false,
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "x": 530,
+        "y": 160,
+        "wires": [
+            [
+                "257028b958eeefd0"
+            ]
+        ]
+    },
+    {
+        "id": "b8b1b44a277d8cbf",
+        "type": "debug",
+        "z": "83e24ff8e628129b",
+        "g": "f9610c39b32051e7",
+        "name": "Payload Debug",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "36cc9f18.c96dd",
+        "type": "server",
+        "name": "Home Assistant",
+        "addon": true,
+        "rejectUnauthorizedCerts": true,
+        "ha_boolean": "",
+        "connectionDelay": false,
+        "cacheJson": false,
+        "heartbeat": false,
+        "heartbeatInterval": "",
+        "statusSeparator": "",
+        "enableGlobalContextStore": false
+    }
+]
